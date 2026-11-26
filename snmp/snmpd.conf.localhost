@@ -1,0 +1,13 @@
+# /etc/snmp/snmpd.conf  -  NMS (localhost). Solo SNMPv3 y solo en loopback.
+agentAddress  udp:127.0.0.1:161
+
+rouser        final-project-nmm  priv
+
+sysLocation   Laboratorio NMS - VMware
+sysContact    Encargado de monitoreo
+sysServices   72
+
+disk  /  10%
+
+# Usuarios con sesion contados en systemd-logind (este Ubuntu no tiene /run/utmp)
+extend usuarios /usr/local/bin/usuarios_logind.sh

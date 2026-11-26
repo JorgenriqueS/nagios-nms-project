@@ -1,0 +1,13 @@
+# /etc/systemd/system/npcd.service
+# Solo si "make fullinstall" de PNP4Nagios no creo la unidad de npcd.
+[Unit]
+Description=PNP4Nagios Perfdata C Daemon (NPCD)
+After=network.target nagios.service
+
+[Service]
+Type=simple
+ExecStart=/usr/local/pnp4nagios/bin/npcd -f /usr/local/pnp4nagios/etc/npcd.cfg
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

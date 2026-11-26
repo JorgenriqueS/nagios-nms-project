@@ -1,0 +1,34 @@
+! =====================================================================
+!  Comandos de monitoreo desde la CLI del router Cisco (EVE-NG)
+!  Equivalentes a cli/monitoreo_cli.sh de los servidores Linux
+! =====================================================================
+!
+! (Opcional, una sola vez) promedios de trafico de 30 s en vez de 5 min:
+! configure terminal
+!  interface Ethernet0/0
+!   load-interval 30
+!  end
+!
+! 1. Velocidad del ancho de banda (configurado / negociado)
+show interfaces Ethernet0/0 | include BW|duplex
+!
+! 2. Usuarios conectados
+show users
+!
+! 3. Throughput de una interfaz
+show interfaces Ethernet0/0 | include rate
+show interfaces Ethernet0/0
+!
+! 4. Capacidad de disco (IOL no tiene flash; se usa nvram:)
+show file systems
+dir nvram:
+!
+! 5. Otros comandos relevantes
+show memory statistics
+show processes cpu sorted
+show processes memory sorted
+show control-plane host open-ports
+show ip route
+show clock detail
+show version | include uptime
+ping 192.168.20.20

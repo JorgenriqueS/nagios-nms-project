@@ -1,0 +1,44 @@
+! =====================================================================
+!  Router Cisco (EVE-NG) - SNMPv3 (authPriv) y syslog hacia el NMS 192.168.20.20
+! =====================================================================
+enable
+configure terminal
+!
+! --- Hora correcta en los logs (Guatemala UTC-6) ---
+clock timezone CST -6 0
+service timestamps log datetime msec localtime show-timezone
+service timestamps debug datetime msec localtime show-timezone
+!
+! --- Quitar cualquier comunidad v1/v2c previa ---
+! no snmp-server community public
+!
+! --- SNMPv3: solo desde el NMS, autenticacion SHA y cifrado AES-128 ---
+ip access-list standard ACL-NMS
+ permit host 192.168.20.20
+ deny   any log
+exit
+snmp-server view VISTA-NMS iso included
+snmp-server group GRUPO-NMS v3 priv read VISTA-NMS access ACL-NMS
+snmp-server user final-project-nmm GRUPO-NMS v3 auth sha CAMBIAR_CLAVE_AUTH priv aes 128 CAMBIAR_CLAVE_PRIV
+snmp-server location EVE-NG - Laboratorio NMS
+snmp-server contact Encargado de monitoreo
+snmp-server ifindex persist
+!
+! --- Syslog hacia el NMS ---
+logging host 192.168.20.20
+logging trap informational
+logging buffered 16384 informational
+logging origin-id hostname
+!
+end
+write memory
+!
+! ---------------- Verificacion ----------------
+! show snmp user          (el usuario v3 NO aparece en show running-config)
+! show snmp group
+! show snmp view
+! show logging
+! show ip interface brief
+! show memory statistics
+!
+! Prueba de syslog: entrar y salir de configuracion genera %SYS-5-CONFIG_I

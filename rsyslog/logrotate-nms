@@ -1,0 +1,15 @@
+# /etc/logrotate.d/nms-proyecto  (NMS)
+/var/log/nagios-eventos.log
+/var/log/remoto/*.log
+{
+    weekly
+    rotate 8
+    compress
+    delaycompress
+    missingok
+    notifempty
+    sharedscripts
+    postrotate
+        /usr/lib/rsyslog/rsyslog-rotate
+    endscript
+}

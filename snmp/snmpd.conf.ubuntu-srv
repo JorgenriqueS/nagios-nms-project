@@ -1,0 +1,16 @@
+# /etc/snmp/snmpd.conf  -  Ubuntu Server monitoreado (reemplaza al archivo original)
+# Solo SNMPv3: sin comunidades v1/v2c. El usuario se crea aparte (ver GUIA.md, paso 1.1).
+agentAddress  udp:161
+
+# Usuario v3 de solo lectura; exige autenticacion y cifrado (authPriv)
+rouser        final-project-nmm  priv
+
+sysLocation   Laboratorio NMS - VMware
+sysContact    Encargado de monitoreo
+sysServices   72
+
+# Tabla de discos UCD (opcional, complementa HOST-RESOURCES-MIB)
+disk  /  10%
+
+# Usuarios con sesion contados en systemd-logind (este Ubuntu no tiene /run/utmp)
+extend usuarios /usr/local/bin/usuarios_logind.sh

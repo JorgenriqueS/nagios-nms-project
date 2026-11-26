@@ -1,0 +1,53 @@
+! =====================================================================
+!  Router R1 (IOS 15.7 IOL) - SSHv2 con autenticacion por llave publica
+!  Solo el NMS (192.168.20.20) puede entrar. Usuario: monitoreo
+! =====================================================================
+enable
+configure terminal
+!
+! --- Llaves RSA del router (necesitan un nombre de dominio) ---
+ip domain name nmm.lab
+crypto key generate rsa general-keys modulus 2048
+!
+! --- SSH version 2 ---
+ip ssh version 2
+ip ssh time-out 60
+ip ssh authentication-retries 3
+ip ssh logging events
+!
+! --- Usuario de monitoreo (la clave solo es respaldo; el script entra con llave) ---
+username monitoreo privilege 15 secret CAMBIAR_CLAVE_RESPALDO
+!
+! --- AAA: autenticacion local solo para las VTY; la consola sigue sin login ---
+aaa new-model
+aaa authentication login VTY-LOCAL local
+aaa authorization exec VTY-LOCAL local
+aaa authentication login CONSOLA none
+!
+line con 0
+ login authentication CONSOLA
+!
+line vty 0 4
+ login authentication VTY-LOCAL
+ authorization exec VTY-LOCAL
+ transport input ssh
+ access-class ACL-NMS in
+ exec-timeout 10 0
+!
+! --- Llave publica del NMS (pegar la salida de "fold" del paso 2 de la guia) ---
+ip ssh pubkey-chain
+ username monitoreo
+  key-string
+   PEGAR_AQUI_LAS_LINEAS_DE_LA_LLAVE
+  exit
+ exit
+exit
+!
+end
+write memory
+!
+! ---------------- Verificacion ----------------
+! show ip ssh
+! show running-config | section pubkey-chain
+! show users             (durante una sesion SSH aparece en una linea vty)
+! show ssh               (sesiones SSH activas)

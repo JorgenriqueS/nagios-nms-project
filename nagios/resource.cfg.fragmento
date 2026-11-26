@@ -1,0 +1,6 @@
+# Agregar al final de /usr/local/nagios/etc/resource.cfg
+# (archivo protegido: las credenciales no quedan visibles en la interfaz web)
+# Claves de al menos 8 caracteres, solo letras, numeros, guion y guion bajo.
+$USER10$=final-project-nmm
+$USER11$=CAMBIAR_CLAVE_AUTH
+$USER12$=CAMBIAR_CLAVE_PRIV
